@@ -1,0 +1,3 @@
+[dwave_contrib]
+dwave-system = dwave.system.package_info:contrib
+
