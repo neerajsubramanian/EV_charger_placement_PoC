@@ -4,14 +4,14 @@ import geopandas as gpd
 from shapely.geometry import Polygon
 
 
-def viz_results(build_sites, existing_chargers, radius):
+def viz_results(red, yellow, blue, radius, output_filename):
     street_map = gpd.read_file('data/dubai.shp')
 
     filename = "UAE_Emirate.geojson"
     file = open(filename)
     emirates_map = gpd.read_file(file)
 
-    polygon = Polygon([(55.0, 24.9), (55.0, 25.4), (55.5, 25.4), (55.5, 24.9), (55.0, 24.9)])
+    polygon = Polygon([(55.0, 24.8), (55.0, 25.4), (55.5, 25.4), (55.5, 24.8), (55.0, 24.8)])
     street_map = gpd.clip(street_map, polygon)
     emirates_map = gpd.clip(emirates_map, polygon)
 
@@ -20,7 +20,7 @@ def viz_results(build_sites, existing_chargers, radius):
     ax.axis('off')
 
     # Draw new build sites
-    with open(build_sites) as f:
+    with open(red) as f:
         lines = f.readlines()
 
     points = []
@@ -44,8 +44,28 @@ def viz_results(build_sites, existing_chargers, radius):
     new_df['geometry'] = new_df['geometry'].buffer(radius / 111)
     new_df.plot(ax=ax, color='r', alpha=0.1, zorder=9)
 
+    # Draw not selected build sites
+    with open(blue) as f:
+        lines = f.readlines()
+
+    points = []
+    lats = []
+    longs = []
+    for line in lines:
+        temp = line.split()
+        points.append(temp[0])
+        lats.append(temp[-2])
+        longs.append(temp[-1])
+
+    df = pd.DataFrame({'TYPE': ['no build site'] * len(points), 'Latitude': lats, 'Longitude': longs})
+
+    gdf = gpd.GeoDataFrame(
+        df, geometry=gpd.points_from_xy(df.Longitude, df.Latitude))
+
+    gdf.plot(ax=ax, color='b', zorder=10)
+
     # Draw existing chargers
-    with open(existing_chargers) as f:
+    with open(yellow) as f:
         lines = f.readlines()
 
     points = []
@@ -72,8 +92,8 @@ def viz_results(build_sites, existing_chargers, radius):
     street_map.plot(ax=ax, color='#545454', zorder=5, linewidth=0.5)
     emirates_map.plot(ax=ax, color='#d3d3d3', zorder=0)
 
-    plt.savefig('map.png')
+    plt.savefig(output_filename)
 
 
 if __name__ == '__main__':
-    viz_results('build_sites.txt', 'existing.txt', radius=5)
+    viz_results('build_sites.txt', 'existing.txt', radius=5, filename='map.png')
