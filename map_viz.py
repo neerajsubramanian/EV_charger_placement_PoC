@@ -29,8 +29,8 @@ def viz_results(build_sites, existing_chargers, radius):
     for line in lines:
         temp = line.split()
         points.append(temp[0])
-        lats.append(temp[1])
-        longs.append(temp[2])
+        lats.append(temp[-2])
+        longs.append(temp[-1])
 
     df = pd.DataFrame({'TYPE': ['build site'] * len(points), 'Latitude': lats, 'Longitude': longs})
 
@@ -54,8 +54,8 @@ def viz_results(build_sites, existing_chargers, radius):
     for line in lines:
         temp = line.split()
         points.append(temp[0])
-        lats.append(temp[1])
-        longs.append(temp[2])
+        lats.append(temp[-2])
+        longs.append(temp[-1])
 
     df_charger = pd.DataFrame({'TYPE': ['charger'] * len(points), 'Latitude': lats, 'Longitude': longs})
 
@@ -76,4 +76,4 @@ def viz_results(build_sites, existing_chargers, radius):
 
 
 if __name__ == '__main__':
-    viz_results('points.txt', 'chargers.txt', radius=5)
+    viz_results('build_sites.txt', 'existing.txt', radius=5)
