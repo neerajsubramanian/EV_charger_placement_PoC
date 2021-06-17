@@ -16,8 +16,8 @@ dist_mat_ss = dist_mat_sites_to_sites(sites_index)
 
 # Build neighbor graphs
 min_dist = 10
-graph_sc = build_distance_graph(min_dist, dist_mat_sc)
-graph_ss = build_distance_graph(min_dist, dist_mat_ss)
+graph_sc = build_distance_graph(min_dist*2, dist_mat_sc)
+graph_ss = build_distance_graph(min_dist*2, dist_mat_ss)
 
 cost = 20
 
