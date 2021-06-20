@@ -65,9 +65,9 @@ for site1, val in sites_index.items():
 
 chargers_per_zone = 1
 gamme_3 = 150
-for zone in zones.keys():
-    for i in range(zones[zone]):
-        Q[(zone, i), (zone, j)] += (-2 * )
+# for zone in zones.keys():
+#     for i in range(zones[zone]):
+#         Q[(zone, i), (zone, j)] += (-2 * )
 
 
         ##  MORE WORK TO DO - INCOMPLETE -> n_final version
