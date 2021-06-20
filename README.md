@@ -1,8 +1,9 @@
-# Utilities.py 
+#   Final Small Scale Program
 
-- Program that works with reading and writing the text files in the project
-- Has functions that can be called to calculate the distance matrices
-- Has a fucntion to draw the distance Graph using networkx (based on the minimum distance constraint for the project)
+- uses functions from visualization.py & utilities.py to
+work with objectives and constraints of the project
+- uses D-Wave's LeapHybridSolver as solver for the program
+
 
 Notes:
 
