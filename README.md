@@ -7,4 +7,4 @@ work with objectives and constraints of the project
 
 Notes:
 
-- commented out the function call in visualization.py -> will use the function in the n_final branch with obj_constr.py post-solving
+- commented out the function call in visualization.py -> will use the function in the n_final branch with obj_constr.py post-solving.
