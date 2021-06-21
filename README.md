@@ -6,4 +6,4 @@ work with objectives and constraints of the project
 - returned output from solver stored in soln.txt file
 - soln_.txt is plotted as the final visual output -> soln_map.png
 
-![soln]soln_map.png
+![soln](soln_map.png)
