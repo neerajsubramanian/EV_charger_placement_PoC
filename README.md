@@ -1,25 +1,27 @@
 # Electric Vehicle Charger Placement
-Objective: Minimize Costs
+
+Objective: 
+- Minimize Costs
 
 Constraints:
+- Minimize distance between nearby chargers (nearby is flexible)
+- One charger per zone (number per zone is flexible)
 
-Minimize distance between nearby chargers (nearby is flexible)
-One charger per zone (number per zone is flexible)
-Prefer high traffic locations (to be implemented)
-Additional future variations:
-
-Minimize travel time between nearby chargers
 Inputs:
+- Existing charger information: name / lat / long
+- Build site information: zone / sector / lat / long
 
-Existing charger information: name / lat / long
-Build site information: zone / sector / lat / long
 Outputs: Map of charger network
+- Yellow: existing chargers
+- Red: selected build sites for new chargers
+- Blue: non-selected build sites for new chargers
 
-Yellow: existing chargers
-Red: selected build sites for new chargers
-Blue: non-selected build sites for new chargers
+Additional future variations (to be implemented):
 
-{ Final Small Scale Program
+- Objective: Minimize travel time between nearby chargers
+- Constraint: Prefer high traffic locations
+
+{ Final Small Scale Program notes:
 - uses functions from visualization.py & utilities.py to
 work with objectives and constraints of the project
 - uses D-Wave's LeapHybridSolver as solver for the program
