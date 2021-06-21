@@ -77,7 +77,7 @@ def dist_matrix_sites_to_chargers(sites_index, chargers):
     dist_matrix = np.zeros((len(sites_index), len(chargers)))
     for key_n, value_n in sites_index.items():
         for key_e, value_e in chargers.items():
-            dist_matrix[value_n[0], key_e] = haversine(value_n[1:], value_e[1:])/1000.0
+            dist_matrix[value_n[0], key_e] = haversine((value_n[1:]), value_e)/1000.0
     return dist_matrix
 
 

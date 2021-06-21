@@ -62,12 +62,23 @@ for site1, val in sites_index.items():
 
 
 #   Constraint 3 => number of chargers per zone = 1
-
+#   linear coeff =  -2*c+1 ; quadratic coeff = 2*
 chargers_per_zone = 1
-gamme_3 = 150
-# for zone in zones.keys():
-#     for i in range(zones[zone]):
-#         Q[(zone, i), (zone, j)] += (-2 * )
+gamma_3 = 150
+for zone in zones.keys():
+    for i in range(zones[zone]):
+        Q[(zone, i), (zone, i)] += (-2 * chargers_per_zone + 1) * gamma_3
+        for j in range(i + 1, zones[zone]):
+            Q[(zone, i), (zone, j)] += 2 * gamma_3
 
 
-        ##  MORE WORK TO DO - INCOMPLETE -> n_final version
+
+#   Solve
+sampler = LeapHybridSampler()
+sampleset = sampler.sample_qubo(Q)
+sample = sampleset.first.sample
+for key, val in sample.items():
+    print(key, val)
+
+write_output_file(sample, sites_index)
+viz_results(red='soln.txt', yellow="existing.txt", blue="non_soln.txt", radius=5, output_filename="soln_map.png")
