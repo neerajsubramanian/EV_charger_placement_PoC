@@ -96,4 +96,4 @@ def viz_results(red, yellow, blue, radius, output_filename):
 
 
 if __name__ == '__main__':
-    viz_results('build_sites.txt', 'existing.txt', radius=5, filename='map.png')
+    viz_results(red='soln.txt', yellow='existing.txt', blue="non_soln.txt", radius=5, output_filename='map.png')
