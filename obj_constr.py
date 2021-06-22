@@ -7,17 +7,17 @@ from utilities import *
 import map_viz
 
 # Read in data from files
-sites_index, zones, rev_index = read_in_sites("build_sites.txt")
-chargers_index = read_in_existing("existing.txt")
+sites_index, zones, rev_index = read_build_sites("build_sites.txt")
+chargers_index = read_existing_chargers("existing.txt")
 
 # Compute distances from lat/long
-dist_mat_sc = dist_mat_sites_to_chargers(sites_index, chargers_index)
-dist_mat_ss = dist_mat_sites_to_sites(sites_index)
+dist_mat_sc = dist_matrix_sites_to_chargers(sites_index, chargers_index)
+dist_mat_ss = dist_matrix_sites_to_sites(sites_index)
 
 # Build neighbor graphs
 min_dist = 10
-graph_sc = build_distance_graph(min_dist*2, dist_mat_sc)
-graph_ss = build_distance_graph(min_dist*2, dist_mat_ss)
+graph_sc = dist_graph(min_dist*2, dist_mat_sc)
+graph_ss = dist_graph(min_dist*2, dist_mat_ss)
 
 cost = 20
 
@@ -75,5 +75,5 @@ sample = sampleset.first.sample
 for key, val in sample.items():
     print(key, val)
 
-write_output_to_file(sample, sites_index)
+write_output_file(sample, sites_index)
 map_viz.viz_results(red="soln.txt", yellow="existing.txt", blue="non_soln.txt", radius=5, output_filename="soln_map.png")
