@@ -6,10 +6,11 @@ Objective:
 Constraints:
 - Minimize distance between nearby chargers (nearby is flexible)
 - One charger per zone (number per zone is flexible)
+- Prefer high traffic build sites (traffic information is flexible - using vehicles per hour)
 
 Inputs:
-- Existing charger information: name / lat / long
-- Build site information: zone / sector / lat / long
+- Existing charger information: name / lat / long / traffic
+- Build site information: zone / sector / lat / long / traffic
 
 Outputs: Map of charger network
 - Yellow: existing chargers
@@ -17,15 +18,6 @@ Outputs: Map of charger network
 - Blue: non-selected build sites for new chargers
 
 Additional future variations (to be implemented):
-
 - Objective: Minimize travel time between nearby chargers
-- Constraint: Prefer high traffic locations
-
-{ Final Small Scale Program notes:
-- uses functions from visualization.py & utilities.py to
-work with objectives and constraints of the project
-- uses D-Wave's LeapHybridSolver as solver for the program
-- returned output from solver stored in soln.txt file
-- soln_.txt is plotted as the final visual output -> soln_map.png }
 
 ![soln](soln_map.png)
