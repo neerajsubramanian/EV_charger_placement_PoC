@@ -27,6 +27,7 @@ def read_build_sites(build_sites_filename):
     counter = 0
     sites_index = {}
     rev_index = {}
+    site_traffic_index = {}
     #   List that indicates how many sectors are in each zone. zones[zone_number] = # sectors    
     zones = defaultdict(int)
     for line in lines:
@@ -34,8 +35,10 @@ def read_build_sites(build_sites_filename):
         zone_index = int(temp[0][1:])-1
         zones[zone_index] +=1
         sec_index = int(temp[1][1:])-1
-        latf = float(temp[-2])
-        longf = float(temp[-1])
+        latf = float(temp[-3])
+        longf = float(temp[-2])
+        traffic = float(temp[-1])
+        site_traffic_index[(zone_index, sec_index)] = traffic
         sites_index[(zone_index, sec_index)] = (counter, latf, longf)
         rev_index[counter] = (zone_index, sec_index)
         counter += 1
@@ -43,7 +46,7 @@ def read_build_sites(build_sites_filename):
     # print(zones)
     # print(rev_index)
     # print(counter)
-    return sites_index, zones, rev_index
+    return sites_index, zones, rev_index, site_traffic_index
 
 
 #   Read data from existing.txt file for existing chargers
@@ -51,15 +54,19 @@ def read_existing_chargers(existing_filename):
     with open(existing_filename) as f:
         lines = f.readlines()
     chargers_index = {}
+    traffic_index = {}
     for line in lines:
         # print(line)
         temp = line.split()
         name = int(temp[0][1:])-1
-        latf = float(temp[-2])
-        longf = float(temp[-1])
+        latf = float(temp[-3])
+        longf = float(temp[-2])
         chargers_index[name] = (latf, longf)
-    # print(chargers_index)
-    return chargers_index
+        traffic = float(temp[-1])
+        traffic_index[name] = traffic
+    print(chargers_index)
+    # print()
+    return chargers_index, traffic_index
 
 #   Distance from sites to sites
 def dist_matrix_sites_to_sites(sites_index):
@@ -79,6 +86,12 @@ def dist_matrix_sites_to_chargers(sites_index, chargers):
         for key_e, value_e in chargers.items():
             dist_matrix[value_n[0], key_e] = haversine((value_n[1:]), value_e)/1000.0
     return dist_matrix
+
+
+#   Travel time between points
+#AIzaSyAscq6Lt1CW_pv2mjUMgR4geE4p1qrbUOI
+#AIzaSyAJ8BmCwm1WISEQ0zle15HclVpdT3_SFyA
+
 
 
 #   Distance graph -> minimum acceptable distance, dist_matrices:
@@ -109,4 +122,4 @@ def write_output_file(sample, sites_index):
 
 
 # read_build_sites('build_sites.txt')
-# read_existing_chargers('existing.txt')
+# read_existing_chargers('existing_add.txt')

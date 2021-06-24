@@ -7,8 +7,8 @@ from visualization import *
 from dwave.system import LeapHybridSampler
 
 #   Read in data from files (functions from utilities.py)
-sites_index, zones, rev_index = read_build_sites("build_sites.txt")
-chargers_index = read_existing_chargers("existing.txt")
+sites_index, zones, rev_index, site_traffic_index = read_build_sites("build_sites_add.txt")
+chargers_index, traffic_index = read_existing_chargers("existing_add.txt")
 
 #   Compute the distances from points in files
 dist_mat_ss = dist_matrix_sites_to_sites(sites_index)
@@ -26,13 +26,15 @@ num_zones = len(zones) # len returns number of objects
 num_sec = 4
 
 
-#   Objective - add a cost for each site
+#   Objective => add a cost for each site
 for site in sites_index.keys():
     Q[(site, site)] += cost
 
 
+#   Objective 2 => minimize travel time between all points
 
-#   Constraint 1 = min ave distance to existing chargers in neighborhood
+
+#   Constraint 1 => min ave distance to existing chargers in neighborhood
 for site, val in sites_index.items():
     #   site = (zone, sector)
     #   val = (index, lat, long)
@@ -51,7 +53,7 @@ for site, val in sites_index.items():
     
 
 
-#   Constraint 2 = min ave distance to other new zones in neighborhood
+#   Constraint 2 => min ave distance to other new zones in neighborhood
 for site1, val in sites_index.items():
     #   site = (zone, sector)
     #   val = (index, lat, long)
@@ -64,12 +66,21 @@ for site1, val in sites_index.items():
 #   Constraint 3 => number of chargers per zone = 1
 #   linear coeff =  -2*c+1 ; quadratic coeff = 2*
 chargers_per_zone = 1
-gamma_3 = 150
+gamma_3 = 1250
 for zone in zones.keys():
     for i in range(zones[zone]):
         Q[(zone, i), (zone, i)] += (-2 * chargers_per_zone + 1) * gamma_3
         for j in range(i + 1, zones[zone]):
             Q[(zone, i), (zone, j)] += 2 * gamma_3
+
+
+#   Constraint 4 => Prefer high traffic *build site* locations
+# high_traffic_determinant_value = 750
+# for site in sites_index.keys():
+#     Q[(site, site)] += site_traffic_index
+for zone in zones.keys():
+    for i in range(zones[zone]):
+        Q[(zone, i), (zone, i)] += -1 * site_traffic_index[(zone, i)]
 
 
 
