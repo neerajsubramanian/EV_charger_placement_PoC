@@ -12,7 +12,11 @@ chargers_index, traffic_index = read_existing_chargers("existing_add.txt")
 
 #   Compute the distances from points in files
 dist_mat_ss = dist_matrix_sites_to_sites(sites_index)
+# print(dist_mat_ss)
 dist_mat_sc = dist_matrix_sites_to_chargers(sites_index, chargers_index)
+# print(dist_mat_sc)
+
+dist_mat_ss, dist_mat_sc = travel_time(sites_index, chargers_index, site_traffic_index, traffic_index, dist_mat_ss, dist_mat_sc)
 
 #   Build neighbor graphs
 max_dist = 10
@@ -32,7 +36,7 @@ for site in sites_index.keys():
 
 
 #   Objective 2 => minimize travel time between all points
-
+#   worked on above
 
 #   Constraint 1 => min ave distance to existing chargers in neighborhood
 for site, val in sites_index.items():
@@ -49,8 +53,6 @@ for site, val in sites_index.items():
     else:   #   node has no neighbors that are existing chargers, set a large value
         ave_dist = 100
     Q[(site, site)] += ave_dist
-
-    
 
 
 #   Constraint 2 => min ave distance to other new zones in neighborhood
@@ -75,9 +77,6 @@ for zone in zones.keys():
 
 
 #   Constraint 4 => Prefer high traffic *build site* locations
-# high_traffic_determinant_value = 750
-# for site in sites_index.keys():
-#     Q[(site, site)] += site_traffic_index
 for zone in zones.keys():
     for i in range(zones[zone]):
         Q[(zone, i), (zone, i)] += -1 * site_traffic_index[(zone, i)]

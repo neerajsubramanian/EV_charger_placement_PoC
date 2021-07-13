@@ -86,4 +86,4 @@ def viz_results(red, yellow, blue, radius, output_filename):
 #   RED -> NEW BUILD SITES
 #   YELLOW -> EXISTING CHARGERS
 #   BLUE -> NOT BUILD SITES
-viz_results('build_sites.txt', 'existing.txt', 'non_soln.txt', radius=5, output_filename='map.png')
+#viz_results('build_sites.txt', 'existing.txt', 'non_soln.txt', radius=5, output_filename='map.png')

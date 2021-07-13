@@ -6,7 +6,6 @@ import math
 import numpy as np
 import networkx as nx
 
-
 #   Calculate distance between points
 def haversine(coord1, coord2):
     R = 6372800  # Earth radius in meters
@@ -46,6 +45,7 @@ def read_build_sites(build_sites_filename):
     # print(zones)
     # print(rev_index)
     # print(counter)
+    print(site_traffic_index)
     return sites_index, zones, rev_index, site_traffic_index
 
 
@@ -64,9 +64,10 @@ def read_existing_chargers(existing_filename):
         chargers_index[name] = (latf, longf)
         traffic = float(temp[-1])
         traffic_index[name] = traffic
-    print(chargers_index)
-    # print()
+    # print(chargers_index)
+    print(traffic_index)
     return chargers_index, traffic_index
+
 
 #   Distance from sites to sites
 def dist_matrix_sites_to_sites(sites_index):
@@ -87,10 +88,49 @@ def dist_matrix_sites_to_chargers(sites_index, chargers):
             dist_matrix[value_n[0], key_e] = haversine((value_n[1:]), value_e)/1000.0
     return dist_matrix
 
+#   Feels like travel time (all points)
+def travel_time(sites_index, chargers_index, site_traffic_index, traffic_index, dist_matrix_ss, dist_matrix_sc):
+    limit_low = 400
+    limit_high = 700
+    #   need to link site_traffic_index, dist_matrix_ss & dist_matrix_sc
+    #   need to link traffic_index, dist_matrix_ss & dist_matrix_sc
+    # for key_n, value_n in dist_matrix_ss.items():
+    #     for key_e, value_e in dist_matrix_sc.items():
+    #         #?
+    for key_n, value_n in sites_index.items():
+        for key_e, value_e in sites_index.items():
+            traffic_n  = site_traffic_index[key_n]
+            traffic_e = site_traffic_index[key_e]
+            print(value_n, value_e)
+            avg_traffic = (traffic_n+traffic_e)/2
+            if (avg_traffic < limit_low):
+                # coeff of 0.5/0.75, if 10, might feel like 5
+                dist_matrix_ss[value_n[0], value_e[0]] *= 0.5
+            elif (avg_traffic >= limit_high):
+                #   coeff of *2, if 10, might feel like 20
+                dist_matrix_ss[value_n[0], value_e[0]] *= 2
+            else:
+                # coeff of 1, if 10 then feels like 10
+                dist_matrix_ss[value_n[0], value_e[0]] *= 1
 
-#   Travel time between points
-#AIzaSyAscq6Lt1CW_pv2mjUMgR4geE4p1qrbUOI
-#AIzaSyAJ8BmCwm1WISEQ0zle15HclVpdT3_SFyA
+    for key_n, value_n in sites_index.items():
+        for key_e, value_e in chargers_index.items():
+            traffic_n = site_traffic_index[key_n]
+            traffic_e = traffic_index[key_e]
+            print(value_n, value_e)
+            avg_traffic = (traffic_n + traffic_e) / 2
+            if (avg_traffic < limit_low):
+                # coeff of 0.5/0.75, if 10, might feel like 5
+                dist_matrix_sc[value_n[0], key_e] *= 0.5
+            elif (avg_traffic >= limit_high):
+                #   coeff of *2, if 10, might feel like 20
+                dist_matrix_sc[value_n[0], key_e] *= 2
+            else:
+                # coeff of 1, if 10 then feels like 10
+                dist_matrix_sc[value_n[0], key_e] *= 1
+
+    return dist_matrix_ss, dist_matrix_sc
+
 
 
 
@@ -122,4 +162,6 @@ def write_output_file(sample, sites_index):
 
 
 # read_build_sites('build_sites.txt')
+# read_existing_chargers('existing_add.txt')
+# read_build_sites('build_sites_add.txt')
 # read_existing_chargers('existing_add.txt')
