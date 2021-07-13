@@ -2,6 +2,7 @@
 
 Objective: 
 - Minimize Costs
+- Minimize travel time between nearby chargers
 
 Constraints:
 - Minimize distance between nearby chargers (nearby is flexible)
@@ -17,7 +18,5 @@ Outputs: Map of charger network
 - Red: selected build sites for new chargers
 - Blue: non-selected build sites for new chargers
 
-Additional future variations (to be implemented):
-- Objective: Minimize travel time between nearby chargers
 
 ![soln](soln_map.png)
